@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ssh key yaratsish
+        run: |
+          mkdir -p ~./ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~./ssh/id_rsa
+          ssh-keyscan -H ${{vars.HOST}} > ~./ssh/known_hosts
+
+      - name: serverga ulanish
+        run: ssh ${{vars.USER}}@${{vars.HOST}}
+
+      - name: repozitorylarni yangilash
+        run: |
+          ssh ${{vars.USER}}@${{vars.HOST}} << 'EOF'
+          cd  projects/Tijara
+          git pull origin main
+          EOF
