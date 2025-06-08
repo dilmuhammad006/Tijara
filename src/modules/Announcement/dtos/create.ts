@@ -49,6 +49,7 @@ export class CreateAnnouncementDto {
   @IsInt()
   categoryId: number;
 
+  @ApiProperty({ type: 'string', format: 'binary', isArray: true })
   @IsOptional()
   images: Express.Multer.File[];
 }

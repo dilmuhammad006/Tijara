@@ -9,17 +9,20 @@ import { LoginDto, RegisterDto } from './dtos';
 import * as bcrypt from 'bcryptjs';
 import { Roles } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { FsHelper } from 'src/helpers';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
+    private readonly fs: FsHelper,
   ) {}
 
   async onModuleInit() {
     try {
       await this.#_seedUsers();
+      await this.fs.ensureUploadDirExists();
       console.log('✅');
     } catch (error) {
       console.log(error.message);

@@ -1,7 +1,128 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../Prisma';
+import { FsHelper } from 'src/helpers';
+import { CreateAnnouncementDto, UpdateAnnouncementDto } from './dtos';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 @Injectable()
 export class AnnouncementService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly fs: FsHelper,
+  ) {}
+
+  async getAll() {
+    const announcements = await this.prisma.announcement.findMany();
+
+    return {
+      message: 'success',
+      data: announcements,
+    };
+  }
+
+  async getOne(id: number) {
+    const founded = await this.prisma.announcement.findFirst({ where: { id } });
+
+    if (!founded) {
+      throw new NotFoundException('Announcement not found!');
+    }
+
+    return {
+      message: 'success',
+      data: founded,
+    };
+  }
+
+  async create(payload: CreateAnnouncementDto, files: Express.Multer.File[]) {
+    const image = await this.fs.uploadFile(files);
+    const announcement = await this.prisma.announcement.create({
+      data: {
+        name: payload.name,
+        categoryID: payload.categoryId,
+        description: payload.description,
+        location: payload.location,
+        price: payload.price,
+        images: image.fileUrl,
+      },
+    });
+
+    return {
+      message: 'success',
+      data: announcement,
+    };
+  }
+
+  async delete(id: number) {
+    const founded = await this.prisma.announcement.findFirst({ where: { id } });
+
+    if (!founded) {
+      throw new NotFoundException('Announcement not found!');
+    }
+    if (founded.images) {
+      for (let file of founded.images) {
+        if (fs.existsSync(path.join(process.cwd(), 'uploads', file))) {
+          this.fs.unlinkFile(file);
+        }
+      }
+    }
+
+    await this.prisma.announcement.delete({ where: { id } });
+
+    return {
+      message: 'success',
+    };
+  }
+
+  async update(payload: UpdateAnnouncementDto, id: number) {
+    const founded = await this.prisma.announcement.findFirst({ where: { id } });
+
+    if (!founded) {
+      throw new NotFoundException('Announcement not found!');
+    }
+
+    const announcement = await this.prisma.announcement.update({
+      where: { id },
+      data: {
+        name: payload.name,
+        price: payload.price,
+        categoryID: payload.categoryId,
+        description: payload.description,
+        location: payload.location,
+      },
+    });
+
+    return {
+      message: 'success',
+      data: announcement,
+    };
+  }
+
+  async updateImage(files: Express.Multer.File[], id: number) {
+    const founded = await this.prisma.announcement.findFirst({ where: { id } });
+
+    if (!founded) {
+      throw new NotFoundException('Announcement not found!');
+    }
+
+    if (founded.images) {
+      for (let file of founded.images) {
+        if (fs.existsSync(path.join(process.cwd(), 'uploads', file))) {
+          this.fs.unlinkFile(file);
+        }
+      }
+    }
+
+    const image = await this.fs.uploadFile(files);
+
+    const announcement = await this.prisma.announcement.update({
+      where: { id },
+      data: { images: image.fileUrl },
+    });
+
+    return {
+      message: 'success',
+      data: announcement,
+    };
+  }
 }

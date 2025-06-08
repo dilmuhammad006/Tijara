@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule, CategoryModule, PrismaModule } from './modules';
+import {
+  AnnouncementModle,
+  AuthModule,
+  CategoryModule,
+  PrismaModule,
+} from './modules';
 
 @Module({
   imports: [
@@ -8,6 +13,7 @@ import { AuthModule, CategoryModule, PrismaModule } from './modules';
     PrismaModule,
     AuthModule,
     CategoryModule,
+    AnnouncementModle,
   ],
 })
 export class AppModule {}

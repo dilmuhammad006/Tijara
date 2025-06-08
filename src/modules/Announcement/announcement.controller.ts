@@ -1,7 +1,88 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Put,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AnnouncementService } from './announcement.service';
+import { ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import {
+  CreateAnnouncementDto,
+  UpdateAnnouncementDto,
+  UpdateImageDto,
+} from './dtos';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('announcement')
 export class AnnouncementController {
   constructor(private readonly service: AnnouncementService) {}
+
+  @ApiOperation({
+    summary: 'Get all announcements',
+  })
+  @Get()
+  async getAll() {
+    return await this.service.getAll();
+  }
+
+  @ApiOperation({
+    summary: 'Get one category',
+  })
+  @Get(':id')
+  async getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.service.getOne(id);
+  }
+
+  @ApiOperation({
+    summary: 'Create new announcement',
+  })
+  @Post()
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  async create(
+    @Body() payload: CreateAnnouncementDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    return this.service.create(payload, images);
+  }
+
+  @ApiOperation({
+    summary: 'Delete announcement',
+  })
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.service.delete(id);
+  }
+
+  @ApiOperation({
+    summary: 'Update announcement info',
+  })
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateAnnouncementDto,
+  ) {
+    return await this.service.update(payload, id);
+  }
+
+  @ApiOperation({
+    summary: 'Update announcement image',
+  })
+  @Put(':id')
+  @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  async updateImage(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFiles() images: Express.Multer.File[],
+    @Body() image: UpdateImageDto,
+  ) {
+    return await this.service.updateImage(images, id);
+  }
 }
