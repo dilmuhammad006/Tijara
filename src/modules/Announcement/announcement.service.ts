@@ -128,4 +128,17 @@ export class AnnouncementService {
       data: announcement,
     };
   }
+
+  async getByName(name: string) {
+    const announcements = await this.prisma.announcement.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    return announcements;
+  }
 }

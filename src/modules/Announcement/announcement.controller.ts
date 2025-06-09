@@ -21,12 +21,16 @@ import {
 } from './dtos';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CheckFileMimeType, CheckFileSize } from 'src/pipes';
+import { EnableRoles, Protected } from 'src/guards/decorators';
+import { Roles } from '@prisma/client';
 
 @ApiCookieAuth()
 @Controller('announcement')
 export class AnnouncementController {
   constructor(private readonly service: AnnouncementService) {}
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Get all announcements',
   })
@@ -34,6 +38,9 @@ export class AnnouncementController {
   async getAll() {
     return await this.service.getAll();
   }
+
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Get one announcement and mark as seen',
   })
@@ -45,6 +52,8 @@ export class AnnouncementController {
     return this.service.getOne(id, userId);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Create new announcement',
   })
@@ -62,6 +71,8 @@ export class AnnouncementController {
     return this.service.create(payload, images);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Delete announcement',
   })
@@ -70,6 +81,8 @@ export class AnnouncementController {
     return await this.service.delete(id);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Update announcement info',
   })
@@ -81,6 +94,8 @@ export class AnnouncementController {
     return await this.service.update(payload, id);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Update announcement image',
   })
@@ -97,5 +112,15 @@ export class AnnouncementController {
     @Body() image: UpdateImageDto,
   ) {
     return await this.service.updateImage(images, id);
+  }
+
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
+  @ApiOperation({
+    summary: 'Get announcements by search announcements',
+  })
+  @Get('search')
+  async findByName(@Query('name') name: string) {
+    return await this.service.getByName(name);
   }
 }

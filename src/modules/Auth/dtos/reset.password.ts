@@ -11,7 +11,7 @@ export class ResetPasswordDto {
   email: string;
 
   @ApiProperty({
-    type: 'number',
+    type: 'string',
     required: true,
     example: '123456',
   })
