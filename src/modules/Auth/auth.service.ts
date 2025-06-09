@@ -5,12 +5,18 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaService } from '../Prisma';
-import { LoginDto, RegisterDto } from './dtos';
+import {
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+} from './dtos';
 import * as bcrypt from 'bcryptjs';
 import { Roles } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { FsHelper } from 'src/helpers';
 import { MailService } from 'src/utils';
+import { RedisService } from 'src/clients';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -19,6 +25,7 @@ export class AuthService implements OnModuleInit {
     private readonly jwt: JwtService,
     private readonly fs: FsHelper,
     private readonly mail: MailService,
+    private readonly redis: RedisService,
   ) {}
 
   async onModuleInit() {
@@ -54,7 +61,6 @@ export class AuthService implements OnModuleInit {
       id: user.id,
       role: user.role,
     });
-
 
     await this.mail.sendMail({
       subject: 'Register',
@@ -98,6 +104,59 @@ export class AuthService implements OnModuleInit {
         token: accesToken,
         founded,
       },
+    };
+  }
+  async forgotPassword(payload: ForgotPasswordDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { email: payload.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const data = await this.redis.setVlue(`${payload.email}`, otp, 60 * 3);
+
+    await this.mail.sendMail({
+      to: payload.email,
+      subject: 'Your OTP code',
+      text: `Your OTP code is: ${otp}`,
+    });
+
+    return {
+      message: 'OTP sended to you email',
+    };
+  }
+  async resetPassword(payload: ResetPasswordDto) {
+    const user = await this.prisma.user.findFirst({
+      where: { email: payload.email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const otp = await this.redis.getvalue(payload.email);
+
+    if (!otp) {
+      throw new BadRequestException('OTP expired or not found');
+    }
+
+    if (otp !== payload.otp) {
+      throw new BadRequestException('Invalid OTP code');
+    }
+
+    const hashedPassword = await bcrypt.hash(payload.newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashedPassword },
+    });
+
+    return {
+      message: 'success',
     };
   }
   async #_seedUsers() {

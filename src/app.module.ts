@@ -12,6 +12,8 @@ import * as path from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { CheckAuth, CheckRole } from './guards';
 import { MailModule } from './utils';
+import { RedisModule } from '@nestjs-modules/ioredis';
+import { RedisCustomModule } from './clients';
 
 @Module({
   imports: [
@@ -20,12 +22,20 @@ import { MailModule } from './utils';
       rootPath: path.join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
+    RedisModule.forRoot({
+      type: 'single',
+      options: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     PrismaModule,
     AuthModule,
     CategoryModule,
     AnnouncementModle,
     LikedModule,
     MailModule,
+    RedisCustomModule,
   ],
   providers: [
     {

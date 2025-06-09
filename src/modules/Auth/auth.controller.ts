@@ -1,6 +1,11 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dtos';
+import {
+  ForgotPasswordDto,
+  LoginDto,
+  RegisterDto,
+  ResetPasswordDto,
+} from './dtos';
 import { ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
@@ -42,5 +47,25 @@ export class AuthController {
     });
 
     res.send(data);
+  }
+
+  @Protected(false)
+  @EnableRoles([Roles.ALL])
+  @ApiOperation({
+    summary: 'Forgot password',
+  })
+  @Post('forgot-password')
+  async forgotPassword(@Body() payload: ForgotPasswordDto) {
+    return await this.service.forgotPassword(payload);
+  }
+
+  @Protected(false)
+  @EnableRoles([Roles.ALL])
+  @ApiOperation({
+    summary: 'Reset password',
+  })
+  @Post('reset-password')
+  async resetPassword(@Body() payload: ResetPasswordDto) {
+    return await this.service.resetPassword(payload);
   }
 }
