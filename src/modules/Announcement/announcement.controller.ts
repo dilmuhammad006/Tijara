@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -32,13 +33,15 @@ export class AnnouncementController {
   async getAll() {
     return await this.service.getAll();
   }
-
   @ApiOperation({
-    summary: 'Get one category',
+    summary: 'Get one announcement and mark as seen',
   })
-  @Get(':id')
-  async getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.service.getOne(id);
+  @Get(':id/:userId')
+  async getOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.service.getOne(id, userId);
   }
 
   @ApiOperation({

@@ -4,12 +4,14 @@ import { FsHelper } from 'src/helpers';
 import { CreateAnnouncementDto, UpdateAnnouncementDto } from './dtos';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { LastSeenService } from './last.seen.service';
 
 @Injectable()
 export class AnnouncementService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly fs: FsHelper,
+    private readonly seen: LastSeenService,
   ) {}
 
   async getAll() {
@@ -21,12 +23,13 @@ export class AnnouncementService {
     };
   }
 
-  async getOne(id: number) {
+  async getOne(id: number, userId: number) {
     const founded = await this.prisma.announcement.findFirst({ where: { id } });
 
     if (!founded) {
       throw new NotFoundException('Announcement not found!');
     }
+    await this.seen.createLastSeeenAnnoucement(userId, id);
 
     return {
       message: 'success',
