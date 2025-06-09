@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AnnouncementService } from './announcement.service';
-import { ApiConsumes, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation } from '@nestjs/swagger';
 import {
   CreateAnnouncementDto,
   UpdateAnnouncementDto,
@@ -22,6 +22,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CheckFileMimeType, CheckFileSize } from 'src/pipes';
 
+@ApiBearerAuth()
 @Controller('announcement')
 export class AnnouncementController {
   constructor(private readonly service: AnnouncementService) {}

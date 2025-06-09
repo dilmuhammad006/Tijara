@@ -32,7 +32,7 @@ async function bootstrap() {
     .setDescription('Use token and role for use API')
     .setVersion('1.0')
     .addTag('Tijara')
-    // .addBearerAuth()
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);

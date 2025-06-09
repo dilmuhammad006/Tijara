@@ -9,6 +9,9 @@ import {
 } from './modules';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
+import { APP_GUARD } from '@nestjs/core';
+import { CheckAuth, CheckRole } from './guards';
+import { MailModule } from './utils';
 
 @Module({
   imports: [
@@ -22,6 +25,17 @@ import * as path from 'path';
     CategoryModule,
     AnnouncementModle,
     LikedModule,
+    MailModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CheckAuth,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CheckRole,
+    },
   ],
 })
 export class AppModule {}

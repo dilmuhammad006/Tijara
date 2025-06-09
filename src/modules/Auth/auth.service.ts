@@ -10,6 +10,7 @@ import * as bcrypt from 'bcryptjs';
 import { Roles } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { FsHelper } from 'src/helpers';
+import { MailService } from 'src/utils';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -17,6 +18,7 @@ export class AuthService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly fs: FsHelper,
+    private readonly mail: MailService,
   ) {}
 
   async onModuleInit() {
@@ -53,6 +55,11 @@ export class AuthService implements OnModuleInit {
       role: user.role,
     });
 
+    await this.mail.sendMail({
+      subject: 'Register',
+      to: user.email,
+      text: 'You are successfully  registered our site',
+    });
     return {
       message: 'success',
       data: {

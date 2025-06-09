@@ -10,12 +10,17 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dtos';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { EnableRoles, Protected } from 'src/guards/decorators';
+import { Roles } from '@prisma/client';
 
+@ApiBearerAuth()
 @Controller('category')
 export class CategoryController {
   constructor(private readonly service: CategoryService) {}
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @Get()
   @ApiOperation({
     summary: 'Get all categories',
@@ -24,6 +29,8 @@ export class CategoryController {
     return await this.service.getAll();
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @Get(':id')
   @ApiOperation({
     summary: 'Get one category',
@@ -32,6 +39,8 @@ export class CategoryController {
     return await this.service.getOne(id);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ADMIN])
   @Post()
   @ApiOperation({
     summary: 'Create new category',
@@ -40,6 +49,8 @@ export class CategoryController {
     return await this.service.create(payload);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ADMIN])
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete category',
@@ -48,6 +59,8 @@ export class CategoryController {
     return await this.service.delete(id);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ADMIN])
   @Put(':id')
   @ApiOperation({
     summary: 'Update category',

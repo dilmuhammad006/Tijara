@@ -10,12 +10,17 @@ import {
 } from '@nestjs/common';
 import { LikedService } from './liked.service';
 import { CreateLikedDto, DeleteLikedDto, GetOneLikedDto } from './dtos';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { EnableRoles, Protected } from 'src/guards/decorators';
+import { Roles } from '@prisma/client';
 
+@ApiBearerAuth()
 @Controller('liked')
 export class LikedController {
   constructor(private readonly service: LikedService) {}
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Get all liked announcements',
   })
@@ -24,6 +29,8 @@ export class LikedController {
     return await this.service.getAll(id);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Get one liked announcement',
   })
@@ -32,6 +39,8 @@ export class LikedController {
     return await this.service.getOne(payload);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Create new liked announcement',
   })
@@ -40,6 +49,8 @@ export class LikedController {
     return await this.service.create(payload);
   }
 
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Delete one liked announcement',
   })
