@@ -4,6 +4,7 @@ import {
   AnnouncementModle,
   AuthModule,
   CategoryModule,
+  LikedModule,
   PrismaModule,
 } from './modules';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -20,6 +21,7 @@ import * as path from 'path';
     AuthModule,
     CategoryModule,
     AnnouncementModle,
+    LikedModule,
   ],
 })
 export class AppModule {}
