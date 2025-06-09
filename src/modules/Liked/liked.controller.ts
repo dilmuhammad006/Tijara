@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { LikedService } from './liked.service';
 import { CreateLikedDto, DeleteLikedDto, GetOneLikedDto } from './dtos';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @Controller('liked')
 export class LikedController {
   constructor(private readonly service: LikedService) {}

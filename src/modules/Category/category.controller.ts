@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dtos';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @Controller('category')
 export class CategoryController {
   constructor(private readonly service: CategoryService) {}

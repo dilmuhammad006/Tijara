@@ -55,6 +55,7 @@ export class AuthService implements OnModuleInit {
       role: user.role,
     });
 
+
     await this.mail.sendMail({
       subject: 'Register',
       to: user.email,

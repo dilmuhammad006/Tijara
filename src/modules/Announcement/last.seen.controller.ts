@@ -2,9 +2,9 @@ import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { LastSeenService } from './last.seen.service';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiCookieAuth } from '@nestjs/swagger';
 
-@ApiBearerAuth()
+@ApiCookieAuth()
 @Controller('last-seen')
 export class LastSeenController {
   constructor(private readonly service: LastSeenService) {}

@@ -40,16 +40,10 @@ export class CheckAuth implements CanActivate {
       return true;
     }
 
-    const token = request.headers['authorization'];
-
-    if (!token || !token.startsWith('Bearer ')) {
-      throw new BadRequestException('Incorrect token format');
-    }
-
-    const accessToken = token.split(' ')[1];
+    const accessToken = request.cookies.accessToken;
 
     if (!accessToken) {
-      throw new BadRequestException('Access token not provided');
+      throw new BadRequestException('Incorrect token format');
     }
 
     try {
