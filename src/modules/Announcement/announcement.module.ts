@@ -6,6 +6,11 @@ import { FsHelper } from 'src/helpers';
 
 @Module({
   controllers: [AnnouncementController],
-  providers: [AnnouncementService, PrismaService, FsHelper],
+  providers: [
+    AnnouncementService,
+    PrismaService,
+    FsHelper,
+
+  ],
 })
 export class AnnouncementModle {}

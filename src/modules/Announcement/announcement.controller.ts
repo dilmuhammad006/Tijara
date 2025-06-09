@@ -19,6 +19,7 @@ import {
   UpdateImageDto,
 } from './dtos';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { CheckFileMimeType, CheckFileSize } from 'src/pipes';
 
 @Controller('announcement')
 export class AnnouncementController {
@@ -48,7 +49,11 @@ export class AnnouncementController {
   @ApiConsumes('multipart/form-data')
   async create(
     @Body() payload: CreateAnnouncementDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(
+      new CheckFileSize(10 * 1024 * 1024),
+      new CheckFileMimeType(['jpeg', 'png', 'jpg', 'mpeg', 'jfif', 'gif']),
+    )
+    images: Express.Multer.File[],
   ) {
     return this.service.create(payload, images);
   }
@@ -80,7 +85,11 @@ export class AnnouncementController {
   @ApiConsumes('multipart/form-data')
   async updateImage(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles(
+      new CheckFileSize(10 * 1024 * 1024),
+      new CheckFileMimeType(['jpeg', 'png', 'jpg', 'mpeg', 'jfif', 'gif']),
+    )
+    images: Express.Multer.File[],
     @Body() image: UpdateImageDto,
   ) {
     return await this.service.updateImage(images, id);
