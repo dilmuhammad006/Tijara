@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ForgotPasswordDto,
@@ -10,6 +18,7 @@ import { ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -67,5 +76,20 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() payload: ResetPasswordDto) {
     return await this.service.resetPassword(payload);
+  }
+
+  @Protected(false)
+  @EnableRoles([Roles.ALL])
+  @ApiOperation({ summary: 'Login with google' })
+  @Get('/google')
+  @UseGuards(AuthGuard('google'))
+  async google() {}
+
+  @Protected(false)
+  @EnableRoles([Roles.ALL])
+  @Get('/google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleCallback(@Req() req) {
+    return this.service.google(req.user.email);
   }
 }

@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { FsHelper } from 'src/helpers';
 import { MailService } from 'src/utils';
 import { RedisService } from 'src/clients';
+import { GoogleStrategy } from './strategy';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { RedisService } from 'src/clients';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, FsHelper, MailService, RedisService],
+  providers: [AuthService, PrismaService, FsHelper, MailService, RedisService, GoogleStrategy],
 })
 export class AuthModule {}

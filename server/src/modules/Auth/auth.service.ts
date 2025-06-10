@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaService } from '../Prisma';
@@ -182,5 +183,16 @@ export class AuthService implements OnModuleInit {
         },
       });
     }
+  }
+  async google(email: string) {
+    const founded = await this.prisma.user.findFirst({ where: { email } });
+
+    if (!founded) {
+      throw new NotFoundException('Incorrect email');
+    }
+    return {
+      message: 'success',
+      data: founded,
+    };
   }
 }
