@@ -89,7 +89,13 @@ export class AuthController {
   @EnableRoles([Roles.ALL])
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleCallback(@Req() req) {
-    return this.service.google(req.user.email);
+  async googleCallback(@Req() req, @Res() res: Response) {
+    const data = await this.service.google(req.user.email);
+
+    res.cookie('accessToken', data.data.token, {
+      maxAge: 20 * 60 * 1000,
+      secure: false,
+    });
+    res.redirect('http://localhost:4000');
   }
 }

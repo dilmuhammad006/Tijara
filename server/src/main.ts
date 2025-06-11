@@ -23,10 +23,11 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    allowHeaders: ['Authorization'],
-    methods: ['*'],
+    origin: process.env.CORS_ORIGIN || ['http://localhost:4000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
     optionsSuccessStatus: 200,
-    origin: process.env.CORS_ORIGIN || '*',
   });
 
   const config = new DocumentBuilder()
@@ -42,6 +43,7 @@ async function bootstrap() {
   await app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
     console.log(`http://localhost:${PORT}/docs`);
+    console.log(process.env.CORS_ORIGIN);
   });
 }
 bootstrap();

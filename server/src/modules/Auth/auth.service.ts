@@ -40,6 +40,7 @@ export class AuthService implements OnModuleInit {
     }
   }
   async register(payload: RegisterDto) {
+
     const founded = await this.prisma.user.findFirst({
       where: { email: payload.email },
     });
@@ -190,9 +191,16 @@ export class AuthService implements OnModuleInit {
     if (!founded) {
       throw new NotFoundException('Incorrect email');
     }
+    const accesToken = await this.jwt.signAsync({
+      id: founded.id,
+      role: founded.role,
+    });
     return {
       message: 'success',
-      data: founded,
+      data: {
+        token: accesToken,
+        founded,
+      },
     };
   }
 }
