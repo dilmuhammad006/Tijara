@@ -4,14 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tijara Platform</title>
+    <title>Tijara</title>
+    <link rel="stylesheet" href="./public/css/nav-bar.css">
 </head>
 
 <body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Tijara Platform</div>
 
-    <a href="./pages/sign.html">login</a>
-    <h1>Main page</h1>
-    <script type="module" src="./main.js"></script>
+            <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="./pages/me.html">Profile</a></li>
+                <li>
+                    <a href="/">Announcements ▾</a>
+                    <ul>
+                        <li><a href="./pages/me.html">My announcements</a></li>
+                        <li><a href="./pages/liked.html">Liked announcements</a></li>
+                        <li><a href="./pages/last.seen.html">Last seen announcements</a></li>
+                    </ul>
+                </li>
+                <li><a href="./pages/contact.html">Contact</a></li>
+                <li><a href="./pages/sign.html">Login</a></li>
+            </ul>
+        </div>
+    </nav>
 </body>
 
 </html>
