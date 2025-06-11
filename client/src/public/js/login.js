@@ -9,11 +9,10 @@ const googleBtn = $(".google-btn");
 
 logInBtn.addEventListener("click", async (e) => {
   e.preventDefault();
+  const emailValue = email.value;
+  const passwordValue = password.value;
 
   try {
-    const emailValue = email.value;
-    const passwordValue = password.value;
-
     await customAxios.post("/auth/login", {
       email: emailValue,
       password: passwordValue,
@@ -26,9 +25,9 @@ logInBtn.addEventListener("click", async (e) => {
     if (error.response) {
       alert(`Error: ${error.response.data.message || "Login failed"}`);
     } else if (error.request) {
-      alert("Internal server error!");
+      alert("No response from server!");
     } else {
-      alert("Internal server error!");
+      alert("Request setup failed!");
     }
   }
 });
@@ -40,6 +39,6 @@ googleBtn.addEventListener("click", (e) => {
     window.location.href = `${serverUrl}/auth/google`;
   } catch (error) {
     console.error("Google auth error:", error);
-    alert("Google bilan kirish da xatolik!");
+    alert("Error while login with google!");
   }
 });

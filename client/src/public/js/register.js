@@ -10,28 +10,26 @@ const password = $("#Rpassword");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const emailValue = email.value;
+  const passwordValue = password.value;
+  const nameValue = name.value;
   try {
-    const emailValue = email.value.trim();
-    const passwordValue = password.value.trim();
-    const nameValue = name.value.trim();
     await customAxios.post("/auth/register", {
       email: emailValue,
       password: passwordValue,
       name: nameValue,
     });
 
-    window.location.href = "../../main.html";
+    window.location.href = "../../index.html";
   } catch (error) {
     console.error("Register error:", error);
     if (error.response) {
       const message = error.response.data.message || "Error while register!";
       alert(`Error: ${message}`);
     } else if (error.request) {
-      alert("Internal server error!");
+      alert("No response from server!");
     } else {
-      alert("Internal server error!");
+      alert("Request setup failed!");
     }
   }
 });
-
-
