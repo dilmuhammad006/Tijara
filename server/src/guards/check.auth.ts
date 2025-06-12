@@ -11,7 +11,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService, TokenExpiredError, JsonWebTokenError } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { PROTECTED_KEY } from './decorators';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { Roles } from '@prisma/client';
 
 @Injectable()
@@ -35,13 +35,36 @@ export class CheckAuth implements CanActivate {
       Request & { role?: Roles; userId?: string }
     >();
 
+    const response = ctx.getResponse<Response>();
+
     if (!isProtected) {
       request.role = Roles.USER;
       return true;
     }
 
     const accessToken = request.cookies.accessToken;
+    const refreshToken = request.cookies.refreshToken;
 
+    if (refreshToken && !accessToken) {
+      const payload = this.jwt.verify(refreshToken);
+
+      const newAccesToken = this.jwt.sign({
+        id: payload?.id,
+        role: payload?.role,
+      });
+      const newRefreshToken = this.jwt.sign({
+        id: payload?.userId,
+        role: payload?.role,
+      });
+      response.cookie('accessToken', newAccesToken, {
+        maxAge: 60 * 60 * 1000 * 24,
+        secure: false,
+      });
+      response.cookie('refreshToken', newRefreshToken, {
+        maxAge: 60 * 60 * 1000 * 24,
+        secure: false,
+      });
+    }
     if (!accessToken) {
       throw new BadRequestException('Incorrect token format');
     }

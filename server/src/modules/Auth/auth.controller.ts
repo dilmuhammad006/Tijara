@@ -17,7 +17,7 @@ import {
 import { ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
@@ -33,8 +33,12 @@ export class AuthController {
   async register(@Body() payload: RegisterDto, @Res() res: Response) {
     const data = await this.service.register(payload);
 
-    res.cookie('accessToken', data.data.token, {
-      maxAge: 20 * 60 * 1000,
+    res.cookie('accessToken', data.data.token.accesToken, {
+      maxAge: 60 * 60 * 1000 * 24,
+      secure: false,
+    });
+    res.cookie('refreshToken', data.data.token.refreshToken, {
+      maxAge: 60 * 60 * 1000 * 24,
       secure: false,
     });
 
@@ -50,8 +54,12 @@ export class AuthController {
   async login(@Body() payload: LoginDto, @Res() res: Response) {
     const data = await this.service.login(payload);
 
-    res.cookie('accessToken', data.data.token, {
-      maxAge: 20 * 60 * 1000,
+    res.cookie('accessToken', data.data.token.accesToken, {
+      maxAge: 60 * 60 * 1000 * 24,
+      secure: false,
+    });
+    res.cookie('refreshToken', data.data.token.refreshToken, {
+      maxAge: 60 * 60 * 1000 * 24,
       secure: false,
     });
 
@@ -92,10 +100,22 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res: Response) {
     const data = await this.service.google(req.user.email);
 
-    res.cookie('accessToken', data.data.token, {
-      maxAge: 20 * 60 * 1000,
+    res.cookie('accessToken', data.data.token.accesToken, {
+      maxAge: 60 * 60 * 1000 * 24,
+      secure: false,
+    });
+    res.cookie('refreshToken', data.data.token.refreshToken, {
+      maxAge: 60 * 60 * 1000 * 24,
       secure: false,
     });
     res.redirect('http://localhost:4000');
+  }
+
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
+  @Get('/me')
+  async profile(@Req() req: Request & { userId: number }) {
+    const id = req.userId;
+    return await this.service.profile(id);
   }
 }

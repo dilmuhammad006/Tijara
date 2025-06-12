@@ -40,7 +40,6 @@ export class AuthService implements OnModuleInit {
     }
   }
   async register(payload: RegisterDto) {
-
     const founded = await this.prisma.user.findFirst({
       where: { email: payload.email },
     });
@@ -63,6 +62,10 @@ export class AuthService implements OnModuleInit {
       id: user.id,
       role: user.role,
     });
+    const refreshToken = await this.jwt.signAsync({
+      id: user.id,
+      role: user.role,
+    });
 
     await this.mail.sendMail({
       subject: 'Register',
@@ -72,8 +75,11 @@ export class AuthService implements OnModuleInit {
     return {
       message: 'success',
       data: {
-        token: accesToken,
         user,
+        token: {
+          accesToken,
+          refreshToken,
+        },
       },
     };
   }
@@ -99,12 +105,19 @@ export class AuthService implements OnModuleInit {
       id: founded.id,
       role: founded.role,
     });
+    const refreshToken = await this.jwt.signAsync({
+      id: founded.id,
+      role: founded.role,
+    });
 
     return {
       message: 'success',
       data: {
-        token: accesToken,
         founded,
+        token: {
+          accesToken,
+          refreshToken,
+        },
       },
     };
   }
@@ -195,12 +208,27 @@ export class AuthService implements OnModuleInit {
       id: founded.id,
       role: founded.role,
     });
+    const refreshToken = await this.jwt.signAsync({
+      id: founded.id,
+      role: founded.role,
+    });
     return {
       message: 'success',
       data: {
-        token: accesToken,
         founded,
+        token: {
+          accesToken,
+          refreshToken,
+        },
       },
+    };
+  }
+  async profile(id: number) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    return {
+      message: 'success',
+      data: user,
     };
   }
 }
