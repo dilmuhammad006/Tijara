@@ -53,11 +53,11 @@ export class CheckAuth implements CanActivate {
         role: payload?.role,
       });
       const newRefreshToken = this.jwt.sign({
-        id: payload?.userId,
+        id: payload?.id,
         role: payload?.role,
       });
       response.cookie('accessToken', newAccesToken, {
-        maxAge: 60 * 60 * 1000 * 24,
+        maxAge: 60 * 60 * 1000,
         secure: false,
       });
       response.cookie('refreshToken', newRefreshToken, {

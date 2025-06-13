@@ -90,3 +90,6 @@
         padding: 20px;
     }
 }
+.logout{
+    cursor: pointer;
+}

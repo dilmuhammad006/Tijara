@@ -1,5 +1,7 @@
 import customAxios from "../../config/axios.config.js";
 
+const $ = (el) => document.querySelector(el);
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("uz-UZ", {
@@ -12,29 +14,28 @@ function formatDate(dateString) {
 function displayProfile(userData) {
   const user = userData.data;
 
-  document.getElementById("userName").textContent = user.name;
-  document.getElementById("userRole").textContent = user.role;
-
-  document.getElementById("userId").textContent = user.id;
-  document.getElementById("userNameDetail").textContent = user.name;
-  document.getElementById("userEmail").textContent = user.email;
-  document.getElementById("userCreatedAt").textContent = formatDate(
-    user.createdAt
-  );
+  $("#userName").textContent = user.name;
+  $("#userRole").textContent = user.role;
+  $("#userId").textContent = user.id;
+  $("#userNameDetail").textContent = user.name;
+  $("#userEmail").textContent = user.email;
+  $("#userCreatedAt").textContent = formatDate(user.createdAt);
 }
 
 function showError(message) {
-  document.getElementById("errorText").textContent = message;
-  document.getElementById("errorMessage").style.display = "block";
+  $("#errorText").textContent = message;
+  $("#errorMessage").style.display = "block";
 }
 
 async function fetchProfile() {
   try {
+    $(".logout").style.display = "none";
+
     const response = await customAxios.get("/auth/me");
 
     if (response.data && response.data.message === "success") {
       displayProfile(response.data);
-      document.getElementById("profileContent").style.display = "block";
+      $("#profileContent").style.display = "block";
     } else {
       showError("Incorrect profile info");
     }
@@ -52,6 +53,19 @@ async function fetchProfile() {
   }
 }
 
+const logoutBtn = $(".logout");
+
+logoutBtn.addEventListener("click", async () => {
+  console.log("Logout bosildi");
+  try {
+    await customAxios.get("/auth/logout");
+    window.location.href = "./sign.html";
+  } catch (err) {
+    showError("Logout failed");
+  }
+});
+
 window.addEventListener("DOMContentLoaded", () => {
   fetchProfile();
+  logoutBtn.style.display = "";
 });

@@ -34,7 +34,7 @@ export class AuthController {
     const data = await this.service.register(payload);
 
     res.cookie('accessToken', data.data.token.accesToken, {
-      maxAge: 60 * 60 * 1000 * 24,
+      maxAge: 60 * 60 * 1000,
       secure: false,
     });
     res.cookie('refreshToken', data.data.token.refreshToken, {
@@ -55,7 +55,7 @@ export class AuthController {
     const data = await this.service.login(payload);
 
     res.cookie('accessToken', data.data.token.accesToken, {
-      maxAge: 60 * 60 * 1000 * 24,
+      maxAge: 60 * 60 * 1000,
       secure: false,
     });
     res.cookie('refreshToken', data.data.token.refreshToken, {
@@ -101,7 +101,7 @@ export class AuthController {
     const data = await this.service.google(req.user.email);
 
     res.cookie('accessToken', data.data.token.accesToken, {
-      maxAge: 60 * 60 * 1000 * 24,
+      maxAge: 60 * 60 * 1000,
       secure: false,
     });
     res.cookie('refreshToken', data.data.token.refreshToken, {
@@ -117,5 +117,14 @@ export class AuthController {
   async profile(@Req() req: Request & { userId: number }) {
     const id = req.userId;
     return await this.service.profile(id);
+  }
+
+  @Protected(false)
+  @EnableRoles([Roles.ALL])
+  @Get('/logout')
+  async logout(@Res() res: Response) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return res.status(200).json({ message: 'Logged out successfully' });
   }
 }

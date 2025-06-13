@@ -2,14 +2,26 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { PrismaService } from '../Prisma';
 import { CreateCategoryDto, UpdateCategoryDto } from './dtos';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 @Injectable()
-export class CategoryService {
+export class CategoryService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
+  async onModuleInit() {
+    try {
+      await this.#seedCategory();
+      console.log('✅');
+    } catch (error) {
+      console.log('❌');
+      console.log(error.message);
+    }
+  }
   async getAll() {
     const categories = await this.prisma.category.findMany({
       include: {
@@ -93,5 +105,27 @@ export class CategoryService {
       message: 'success',
       data: category,
     };
+  }
+
+  async #seedCategory() {
+    const res = fs.readFileSync(
+      path.join(process.cwd(), 'src', 'database', 'category.json'),
+      'utf-8',
+    );
+
+    const categories = JSON.parse(res);
+
+    const exists = await this.prisma.category.findMany();
+
+    if (exists.length == 0) {
+      for (let category of categories) {
+        await this.prisma.category.create({
+          data: {
+            name: category.name,
+          },
+        });
+      }
+    }
+
   }
 }
