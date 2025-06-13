@@ -70,7 +70,7 @@ async function loadLikedAnnouncements() {
           });
           card.remove();
         } catch (err) {
-          alert("❌ Like xatoligi");
+          alert("❌ Error");
         }
       };
     });

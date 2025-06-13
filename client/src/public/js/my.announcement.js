@@ -12,6 +12,7 @@ async function loadAnnouncements() {
 
     const announcements = announcementRes.data.data;
     const likedIds = likedRes.data.data.map((item) => item.announcementId);
+    console.log(likedIds);
 
     list.innerHTML = announcements.length
       ? ""
@@ -19,7 +20,6 @@ async function loadAnnouncements() {
 
     announcements.forEach((item, index) => {
       const isLiked = likedIds.includes(item.id);
-
       const card = document.createElement("div");
       card.className = "announcement";
       card.setAttribute("data-id", item.id);
@@ -39,15 +39,14 @@ async function loadAnnouncements() {
           <div class="info">📍 ${item.location}</div>
           <div class="desc">${item.description}</div>
         </div>
-     <div class="actions">
-  <button class="like-btn ${isLiked ? "liked" : ""}">
-    <i class="fa${isLiked ? "s" : "r"} fa-heart"></i>
-  </button>
-  <button class="delete-btn">
-    <i class="fas fa-trash"></i> Delete
-  </button>
-</div>
-
+        <div class="actions">
+          <button class="like-btn ${isLiked ? "liked" : ""}">
+            <i class="fa${isLiked ? "s" : "r"} fa-heart"></i>
+          </button>
+          <button class="delete-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
       `;
 
       list.appendChild(card);
@@ -66,21 +65,37 @@ async function loadAnnouncements() {
       };
 
       const likeBtn = card.querySelector(".like-btn");
+      const heartIcon = likeBtn.querySelector("i");
+
       likeBtn.onclick = async () => {
         const announcementId = Number(card.getAttribute("data-id"));
-        const liked = likeBtn.classList.toggle("liked");
+        const currentlyLiked = likeBtn.classList.contains("liked");
+
+        if (currentlyLiked) {
+          likeBtn.classList.remove("liked");
+          heartIcon.className = "far fa-heart";
+        } else {
+          likeBtn.classList.add("liked");
+          heartIcon.className = "fas fa-heart";
+        }
 
         try {
-          if (liked) {
-            await customAxios.post("/liked", { announcementId });
-          } else {
+          if (currentlyLiked) {
             await customAxios.delete("/liked", {
               data: { announcementId },
             });
+          } else {
+            await customAxios.post("/liked", { announcementId });
           }
         } catch (err) {
+          if (currentlyLiked) {
+            likeBtn.classList.add("liked");
+            heartIcon.className = "fas fa-heart";
+          } else {
+            likeBtn.classList.remove("liked");
+            heartIcon.className = "far fa-heart";
+          }
           alert("❌ Like xatoligi");
-          likeBtn.classList.toggle("liked");
         }
       };
 
@@ -100,7 +115,7 @@ async function loadAnnouncements() {
   } catch (err) {
     console.error(err);
     list.innerHTML =
-      "<p style='color:red;'>Error while connectting the server.</p>";
+      "<p style='color:red;'>Error while connecting the server.</p>";
   }
 }
 

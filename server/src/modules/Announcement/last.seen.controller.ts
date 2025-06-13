@@ -11,7 +11,7 @@ export class LastSeenController {
 
   @Protected(true)
   @EnableRoles([Roles.ALL])
-  @Get(':userId')
+  @Get()
   async getAllLastSeenAnnouncement(@Req() req: Request & { userId: number }) {
     return await this.service.getLastSeen(req.userId);
   }

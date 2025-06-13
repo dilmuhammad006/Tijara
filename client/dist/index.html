@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en"><head><script type="module" src="/sign.f300390c.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tijara</title>
@@ -30,40 +30,25 @@
     </nav>
 
     <div class="second-bar">
-        <ul class="dropdown">
-            <li>
-                <p class=" choosen-category">Category</p>
-                <ul>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                    <li><a>Smartfonlar</a></li>
-                </ul>
-            </li>
-        </ul>
+        <select id="categorySelect">
+            <option disabled="" selected="">Choose category</option>
+        </select>
 
-        <ul class="dropdown">
-            <li>
-                <p class="choosen-location">Location</p>
-                <ul>
-                    <li><a>Toshkent</a></li>
-                    <li><a>Buxoro</a></li>
-                    <li><a>Samarqand</a></li>
-                    <li><a>Andijon</a></li>
-                    <li><a>Fargona</a></li>
-                    <li><a>Namangan</a></li>
-                    <li><a>Sirdaryo</a></li>
-                    <li><a>Jizzax</a></li>
-                    <li><a>Surxondaryo</a></li>
-                    <li><a>Qashqadaryo</a></li>
-                    <li><a>Xorazm</a></li>
-                    <li><a>Urganch</a></li>
-                </ul>
-            </li>
-        </ul>
+        <select id="locationSelect">
+            <option disabled="" selected="">Choose a location</option>
+            <option value="Toshkent">Toshkent</option>
+            <option value="Buxoro">Buxoro</option>
+            <option value="Samarqand">Samarqand</option>
+            <option value="Andijon">Andijon</option>
+            <option value="Fargona">Fargona</option>
+            <option value="Namangan">Namangan</option>
+            <option value="Sirdaryo">Sirdaryo</option>
+            <option value="Jizzax">Jizzax</option>
+            <option value="Surxondaryo">Surxondaryo</option>
+            <option value="Qashqadaryo">Qashqadaryo</option>
+            <option value="Xorazm">Xorazm</option>
+            <option value="Urganch">Urganch</option>
+        </select>]k
 
         <section class="search">
             <input type="text" placeholder="Type here to search ..." id="search" name="search">
@@ -71,6 +56,7 @@
         </section>
     </div>
 
+    <script type="module" src="/client.b3a6bc7d.js"></script>
 
 
-<script src="/client.59712999.js"></script></body></html>
+</body></html>

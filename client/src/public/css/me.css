@@ -1,4 +1,6 @@
-
+* {
+    font-family: "Poppins", sans-serif;
+  }
 .profile-container {
     max-width: 600px;
     margin: 0 auto;

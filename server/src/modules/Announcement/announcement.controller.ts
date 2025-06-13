@@ -39,18 +39,24 @@ export class AnnouncementController {
   async getAll() {
     return await this.service.getAll();
   }
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
+  @Get('my')
+  async me(@Req() req: Request & { userId: number }) {
+    return await this.service.me(req.userId);
+  }
 
   @Protected(true)
   @EnableRoles([Roles.ALL])
   @ApiOperation({
     summary: 'Get one announcement and mark as seen',
   })
-  @Get(':id/:userId')
+  @Get(':id')
   async getOne(
     @Param('id', ParseIntPipe) id: number,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Req() req: Request & { userId: number },
   ) {
-    return this.service.getOne(id, userId);
+    return this.service.getOne(id, req.userId);
   }
 
   @Protected(true)
@@ -124,12 +130,5 @@ export class AnnouncementController {
   @Get('search')
   async findByName(@Query('name') name: string) {
     return await this.service.getByName(name);
-  }
-
-  @Protected(true)
-  @Get('my')
-  @EnableRoles([Roles.ALL])
-  async me(@Req() req: Request & { userId: number }) {
-    return await this.service.me(req.userId);
   }
 }

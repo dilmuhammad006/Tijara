@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -50,7 +49,6 @@ export class LikedController {
     @Body('announcementId', ParseIntPipe) announcementId: number,
     @Req() req: Request & { userId: number },
   ) {
-
     return await this.service.create(req.userId, announcementId);
   }
 

@@ -1,3 +1,6 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
 .form {
   padding-inline: clamp(1rem, 5vw, 2.5rem);
   position: absolute;
