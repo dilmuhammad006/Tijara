@@ -7,9 +7,10 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
 import { LikedService } from './liked.service';
-import { CreateLikedDto, DeleteLikedDto, GetOneLikedDto } from './dtos';
+import { GetOneLikedDto } from './dtos';
 import { ApiCookieAuth, ApiOperation } from '@nestjs/swagger';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
@@ -24,9 +25,9 @@ export class LikedController {
   @ApiOperation({
     summary: 'Get all liked announcements',
   })
-  @Get(':id')
-  async getAll(@Param('id', ParseIntPipe) id: number) {
-    return await this.service.getAll(id);
+  @Get('/all')
+  async getAll(@Req() req: Request & { userId: number }) {
+    return await this.service.getAll(req.userId);
   }
 
   @Protected(true)
@@ -45,8 +46,12 @@ export class LikedController {
     summary: 'Create new liked announcement',
   })
   @Post()
-  async create(@Body() payload: CreateLikedDto) {
-    return await this.service.create(payload);
+  async create(
+    @Body('announcementId', ParseIntPipe) announcementId: number,
+    @Req() req: Request & { userId: number },
+  ) {
+
+    return await this.service.create(req.userId, announcementId);
   }
 
   @Protected(true)
@@ -55,7 +60,10 @@ export class LikedController {
     summary: 'Delete one liked announcement',
   })
   @Delete()
-  async delete(@Query() payload: DeleteLikedDto) {
-    return await this.service.delete(payload);
+  async delete(
+    @Body('announcementId', ParseIntPipe) announcementId: number,
+    @Req() req: Request & { userId: number },
+  ) {
+    return await this.service.delete(req.userId, announcementId);
   }
 }

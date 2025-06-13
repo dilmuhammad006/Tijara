@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../Prisma';
-import { CreateLikedDto, DeleteLikedDto, GetOneLikedDto } from './dtos';
+import { GetOneLikedDto } from './dtos';
 
 @Injectable()
 export class LikedService {
@@ -41,19 +41,19 @@ export class LikedService {
     };
   }
 
-  async create(payload: CreateLikedDto) {
+  async create(userId: number, announcementId: number) {
     const founded = await this.prisma.liked.findFirst({
-      where: { announcementId: payload.announcementId, userId: payload.userId },
+      where: { announcementId: announcementId, userId: userId },
     });
     if (founded) {
       throw new ConflictException('You already like this announcement');
     }
 
-    const user = await this.prisma.user.findFirst({
-      where: { id: payload.userId },
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
     });
     const announcement = await this.prisma.announcement.findFirst({
-      where: { id: payload.announcementId },
+      where: { id: announcementId },
     });
 
     if (!user) {
@@ -64,7 +64,7 @@ export class LikedService {
     }
 
     const liked = await this.prisma.liked.create({
-      data: { announcementId: payload.announcementId, userId: payload.userId },
+      data: { announcementId: announcementId, userId: userId },
     });
     return {
       message: 'success',
@@ -72,14 +72,22 @@ export class LikedService {
     };
   }
 
-  async delete(payload: DeleteLikedDto) {
+  async delete(userId: number, announcementId: number) {
     const founded = await this.prisma.liked.findFirst({
-      where: { userId: payload.userId, announcementId: payload.announcementId },
+      where: { userId: userId, announcementId: announcementId },
     });
 
     if (!founded) {
       throw new NotFoundException('Announcement not found!');
     }
+    await this.prisma.liked.delete({
+      where: {
+        userId_announcementId: {
+          userId,
+          announcementId,
+        },
+      },
+    });
 
     return {
       message: 'success',

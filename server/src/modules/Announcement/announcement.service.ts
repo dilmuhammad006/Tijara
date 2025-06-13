@@ -37,7 +37,11 @@ export class AnnouncementService {
     };
   }
 
-  async create(payload: CreateAnnouncementDto, files: Express.Multer.File[]) {
+  async create(
+    payload: CreateAnnouncementDto,
+    files: Express.Multer.File[],
+    userId: number,
+  ) {
     const image = await this.fs.uploadFile(files);
     const announcement = await this.prisma.announcement.create({
       data: {
@@ -47,6 +51,7 @@ export class AnnouncementService {
         location: payload.location,
         price: payload.price,
         images: image.fileUrl,
+        userId: userId,
       },
     });
 
@@ -142,4 +147,14 @@ export class AnnouncementService {
     return announcements;
   }
 
+  async me(id: number) {
+    const announcements = await this.prisma.announcement.findMany({
+      where: { userId: id },
+    });
+
+    return {
+      message: 'success',
+      data: announcements,
+    };
+  }
 }

@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -62,13 +63,14 @@ export class AnnouncementController {
   @ApiConsumes('multipart/form-data')
   async create(
     @Body() payload: CreateAnnouncementDto,
+    @Req() req: Request & { userId: number },
     @UploadedFiles(
       new CheckFileSize(10 * 1024 * 1024),
       new CheckFileMimeType(['jpeg', 'png', 'jpg', 'mpeg', 'jfif', 'gif']),
     )
     images: Express.Multer.File[],
   ) {
-    return this.service.create(payload, images);
+    return this.service.create(payload, images, req.userId);
   }
 
   @Protected(true)
@@ -122,5 +124,12 @@ export class AnnouncementController {
   @Get('search')
   async findByName(@Query('name') name: string) {
     return await this.service.getByName(name);
+  }
+
+  @Protected(true)
+  @Get('my')
+  @EnableRoles([Roles.ALL])
+  async me(@Req() req: Request & { userId: number }) {
+    return await this.service.me(req.userId);
   }
 }

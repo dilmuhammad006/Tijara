@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { LastSeenService } from './last.seen.service';
 import { EnableRoles, Protected } from 'src/guards/decorators';
 import { Roles } from '@prisma/client';
@@ -12,9 +12,7 @@ export class LastSeenController {
   @Protected(true)
   @EnableRoles([Roles.ALL])
   @Get(':userId')
-  async getAllLastSeenAnnouncement(
-    @Param('userId', ParseIntPipe) userId: number,
-  ) {
-    return await this.service.getLastSeen(userId);
+  async getAllLastSeenAnnouncement(@Req() req: Request & { userId: number }) {
+    return await this.service.getLastSeen(req.userId);
   }
 }
