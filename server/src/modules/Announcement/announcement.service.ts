@@ -14,8 +14,14 @@ export class AnnouncementService {
     private readonly seen: LastSeenService,
   ) {}
 
-  async getAll() {
-    const announcements = await this.prisma.announcement.findMany();
+  async getAll(categoryID?: number, location?: string) {
+    const announcements = await this.prisma.announcement.findMany({
+      orderBy: { createdAt: 'desc' },
+      where: {
+        ...(location && { location }),
+        ...(categoryID && { categoryID }),
+      },
+    });
 
     return {
       message: 'success',

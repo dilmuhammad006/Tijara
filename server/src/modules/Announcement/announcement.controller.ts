@@ -36,8 +36,11 @@ export class AnnouncementController {
     summary: 'Get all announcements',
   })
   @Get()
-  async getAll() {
-    return await this.service.getAll();
+  async getAll(
+    @Query('categoryId') categoryId: number,
+    @Query('location') location: string,
+  ) {
+    return await this.service.getAll(categoryId, location);
   }
   @Protected(true)
   @EnableRoles([Roles.ALL])
@@ -45,7 +48,15 @@ export class AnnouncementController {
   async me(@Req() req: Request & { userId: number }) {
     return await this.service.me(req.userId);
   }
-
+  @Protected(true)
+  @EnableRoles([Roles.ALL])
+  @ApiOperation({
+    summary: 'Get announcements by search announcements',
+  })
+  @Get('search')
+  async findByName(@Query('name') name: string) {
+    return await this.service.getByName(name);
+  }
   @Protected(true)
   @EnableRoles([Roles.ALL])
   @ApiOperation({
@@ -120,15 +131,5 @@ export class AnnouncementController {
     @Body() image: UpdateImageDto,
   ) {
     return await this.service.updateImage(images, id);
-  }
-
-  @Protected(true)
-  @EnableRoles([Roles.ALL])
-  @ApiOperation({
-    summary: 'Get announcements by search announcements',
-  })
-  @Get('search')
-  async findByName(@Query('name') name: string) {
-    return await this.service.getByName(name);
   }
 }

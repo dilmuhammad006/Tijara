@@ -20,7 +20,7 @@ import { RedisCustomModule } from './clients';
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: path.join(process.cwd(), 'uploads'),
-      serveRoot: '/uploads',
+      serveRoot: '/api/uploads',
     }),
     RedisModule.forRoot({
       type: 'single',

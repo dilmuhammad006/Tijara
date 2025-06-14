@@ -4,6 +4,8 @@
     <title>Tijara</title>
     <link rel="stylesheet" href="/last.seen.050b95b6.css">
     <link rel="stylesheet" href="/client.e7ca6ece.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -31,30 +33,31 @@
 
     <div class="second-bar">
         <select id="categorySelect">
-            <option disabled="" selected="">Choose category</option>
+            <option value="" selected="">All categories</option>
         </select>
 
         <select id="locationSelect">
-            <option disabled="" selected="">Choose a location</option>
-            <option value="Toshkent">Toshkent</option>
-            <option value="Buxoro">Buxoro</option>
-            <option value="Samarqand">Samarqand</option>
-            <option value="Andijon">Andijon</option>
-            <option value="Fargona">Fargona</option>
+            <option value="" selected="">All locations</option>
+            <option value="Tashkent">Tashkent</option>
+            <option value="Bukhara">Bukhara</option>
+            <option value="Samarkand">Samarkand</option>
+            <option value="Andijan">Andijan</option>
+            <option value="Fergana">Fergana</option>
             <option value="Namangan">Namangan</option>
-            <option value="Sirdaryo">Sirdaryo</option>
-            <option value="Jizzax">Jizzax</option>
-            <option value="Surxondaryo">Surxondaryo</option>
-            <option value="Qashqadaryo">Qashqadaryo</option>
-            <option value="Xorazm">Xorazm</option>
-            <option value="Urganch">Urganch</option>
-        </select>]k
+            <option value="Syrdarya">Syrdarya</option>
+            <option value="Jizzakh">Jizzakh</option>
+            <option value="Surkhandarya">Surkhandarya</option>
+            <option value="Kashkadarya">Kashkadarya</option>
+            <option value="Khorezm">Khorezm</option>
+            <option value="Urgench">Urgench</option>
+        </select>
 
         <section class="search">
             <input type="text" placeholder="Type here to search ..." id="search" name="search">
-            <label for="search" class="search-btn">🔎</label>
+            <label for="search" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></label>
         </section>
     </div>
+    <div id="announcementList">Loading...</div>
 
     <script type="module" src="/client.b3a6bc7d.js"></script>
 

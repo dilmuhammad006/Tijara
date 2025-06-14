@@ -97,7 +97,7 @@ async function loadAnnouncements() {
             likeBtn.classList.remove("liked");
             heartIcon.className = "far fa-heart";
           }
-          alert("❌ Like xatoligi");
+          alert("❌ Error");
         }
       };
     });
