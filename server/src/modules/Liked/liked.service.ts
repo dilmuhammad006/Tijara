@@ -17,6 +17,9 @@ export class LikedService {
       include: {
         announsement: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return {

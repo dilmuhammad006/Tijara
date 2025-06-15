@@ -156,6 +156,9 @@ export class AnnouncementService {
   async me(id: number) {
     const announcements = await this.prisma.announcement.findMany({
       where: { userId: id },
+      orderBy: {
+        categoryID: 'desc',
+      },
     });
 
     return {

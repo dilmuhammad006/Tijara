@@ -1,7 +1,6 @@
 import customAxios from "../../config/axios.config";
 import { baseURL } from "../../config/baseUrl";
 
-
 const categorySelect = document.getElementById("categorySelect");
 const locationSelect = document.getElementById("locationSelect");
 const list = document.getElementById("announcementList");
@@ -26,23 +25,23 @@ async function loadCategories() {
 
 function getFilters() {
   const filters = {};
-  
+
   const searchTerm = searchInput.value.trim();
   const selectedCategory = categorySelect.value;
   const selectedLocation = locationSelect.value;
-  
+
   if (searchTerm) {
     filters.search = searchTerm;
   }
-  
+
   if (selectedCategory) {
     filters.categoryId = selectedCategory;
   }
-  
+
   if (selectedLocation) {
     filters.location = selectedLocation;
   }
-  
+
   return filters;
 }
 
@@ -50,20 +49,20 @@ async function loadAnnouncements(filters = {}) {
   try {
     let url = "/announcement";
     const params = new URLSearchParams();
-    
+
     if (filters.search) {
       url = "/announcement/search";
       params.append("name", filters.search);
     }
-    
+
     if (filters.categoryId) {
       params.append("categoryId", filters.categoryId);
     }
-    
+
     if (filters.location) {
       params.append("location", filters.location);
     }
-    
+
     const queryString = params.toString();
     const finalUrl = `${url}${queryString ? `?${queryString}` : ""}`;
 
@@ -72,7 +71,8 @@ async function loadAnnouncements(filters = {}) {
       customAxios.get("/liked/all"),
     ]);
 
-    const announcements = announcementRes?.data?.data || announcementRes?.data || [];
+    const announcements =
+      announcementRes?.data?.data || announcementRes?.data || [];
     const likedIds =
       likedRes?.data?.data?.map((item) => item.announcementId) || [];
 
@@ -152,6 +152,7 @@ function renderAnnouncements(announcements, likedIds) {
     }
 
     setupLikeButton(card);
+    setupCardClick(card, item);
   });
 }
 
@@ -242,6 +243,42 @@ searchInput.addEventListener("input", () => {
     search();
   }, 500);
 });
+function setupCardClick(card, item) {
+  const modal = document.getElementById("announcementModal");
+  const modalImg = document.getElementById("modalImage");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalPrice = document.getElementById("modalPrice");
+  const modalLocation = document.getElementById("modalLocation");
+  const modalDescription = document.getElementById("modalDescription");
+
+  card.addEventListener("click", async () => {
+    modal.classList.remove("hidden");
+
+    try {
+      await customAxios.get(`/announcement/${item.id}`);
+    } catch (err) {
+      console.error("Error sending last seen via GET /announcement/:id", err);
+    }
+
+    modalImg.src = item.images?.length
+      ? `${baseURL}/uploads/${item.images[0]}`
+      : `${baseURL}/uploads/default.jpg`;
+    modalTitle.textContent = item.name || "No title";
+    modalPrice.textContent = `$${item.price || 0}`;
+    modalLocation.textContent = `📍 ${item.location || "No location"}`;
+    modalDescription.textContent = item.description || "No description";
+  });
+
+  document.querySelector(".close-btn").addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   loadCategories();
