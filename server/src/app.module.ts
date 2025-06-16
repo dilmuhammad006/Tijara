@@ -9,11 +9,12 @@ import {
 } from './modules';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { CheckAuth, CheckRole } from './guards';
 import { MailModule } from './utils';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { RedisCustomModule } from './clients';
+import { HttpExceptionFilter } from './filters';
 
 @Module({
   imports: [
@@ -45,6 +46,10 @@ import { RedisCustomModule } from './clients';
     {
       provide: APP_GUARD,
       useClass: CheckRole,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

@@ -95,7 +95,7 @@ async function loadAnnouncements() {
             likeBtn.classList.remove("liked");
             heartIcon.className = "far fa-heart";
           }
-          alert("❌ Like xatoligi");
+          alert("❌ Like Error");
         }
       };
 
@@ -107,7 +107,7 @@ async function loadAnnouncements() {
             await customAxios.delete(`/announcement/${id}`);
             card.remove();
           } catch (err) {
-            alert("❌ Delete xatoligi");
+            alert("❌ Delete Error");
           }
         }
       };
