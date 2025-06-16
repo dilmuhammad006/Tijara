@@ -137,6 +137,7 @@ function renderAnnouncements(announcements, likedIds) {
         }</div>
         <div class="info">📍 ${item.location || "No location"}</div>
         <div class="desc">${item.description || "No description"}</div>
+        <div class="desc">${item.email || "No email"}</div>
       </div>
       <div class="actions">
         <button class="like-btn ${isLiked ? "liked" : ""}">
