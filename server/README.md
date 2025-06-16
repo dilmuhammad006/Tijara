@@ -60,3 +60,21 @@
 - UserId
 - AnnouncementID
 - createdAt
+
+
+## Client (Frontend) ni ishga tushirish
+
+cd client
+pnpm install 
+nano .env 
+npm  start
+
+## Server (Backend) ni ishga tusirish
+
+cd server
+pnpm install
+nano .env 
+npx prisma init 
+npx prisma generate 
+npx prisma migrate dev --name init 
+npm run start:dev 

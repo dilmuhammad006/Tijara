@@ -125,10 +125,10 @@ const showError = (msg) => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-$("price").addEventListener("input", (e) => {
-  let val = e.target.value.replace(/\D/g, "");
-  if (val) e.target.value = parseInt(val).toLocaleString("en-US");
-});
-$("price").addEventListener("blur", (e) => {
-  e.target.value = e.target.value.replace(/\D/g, "");
-});
+// $("price").addEventListener("input", (e) => {
+//   let val = e.target.value.replace(/\D/g, "");
+//   if (val) e.target.value = parseInt(val).toLocaleString("en-US");
+// });
+// $("price").addEventListener("blur", (e) => {
+//   e.target.value = e.target.value.replace(/\D/g, "");
+// });
