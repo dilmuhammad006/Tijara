@@ -43,7 +43,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV?.trim() == 'development') {
     SwaggerModule.setup('docs', app, documentFactory);
-    // app.use(morgan('dev'))
+    app.use(morgan('dev'))
   }
   const PORT = process.env.APP_PORT || 2006;
   await app.listen(PORT, () => {

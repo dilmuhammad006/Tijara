@@ -15,7 +15,15 @@ export class LikedService {
     const likedAnnouncements = await this.prisma.liked.findMany({
       where: { userId: id },
       include: {
-        announsement: true,
+        announsement: {
+          include: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',

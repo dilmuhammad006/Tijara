@@ -43,6 +43,7 @@ async function loadAnnouncements() {
           ).toLocaleString()}</div>
           <div class="info">📍 ${announcement.location}</div>
           <div class="desc">${announcement.description}</div>
+          <div class="desc">${announcement.user.email}</div>
         </div>
         <div class="actions">
           <button class="like-btn ${isLiked ? "liked" : ""}">

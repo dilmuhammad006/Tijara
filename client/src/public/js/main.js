@@ -106,6 +106,7 @@ function renderAnnouncements(announcements, likedIds) {
       return;
     }
 
+    console.log(item.userid)
     const isLiked = likedIds.includes(item.id);
     const card = document.createElement("div");
     card.className = "announcement";
@@ -137,7 +138,7 @@ function renderAnnouncements(announcements, likedIds) {
         }</div>
         <div class="info">📍 ${item.location || "No location"}</div>
         <div class="desc">${item.description || "No description"}</div>
-        <div class="desc">${item.email || "No email"}</div>
+        <div class="desc">${item.user.email || "No email"}</div>
       </div>
       <div class="actions">
         <button class="like-btn ${isLiked ? "liked" : ""}">

@@ -25,6 +25,10 @@ jobs:
           ssh -o StrictHostKeyChecking=no "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" << EOF
             cd "$DEPLOY_PATH"
             git pull origin main
+            cd client
             npm install
+            cd ../server
+            npm install
+            cd ..
             pm2 restart all
           EOF

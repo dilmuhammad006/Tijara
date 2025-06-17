@@ -31,7 +31,16 @@ export class LastSeenService {
       },
       take: 10,
       include: {
-        announsement: true,
+        announsement: {
+          include:{
+            user: {
+              select:{
+                email: true
+              }
+            }
+          }
+
+        },
       },
     });
 

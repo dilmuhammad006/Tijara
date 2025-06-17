@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  ParseIntPipe,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -127,4 +129,6 @@ export class AuthController {
     res.clearCookie('refreshToken');
     return res.status(200).json({ message: 'Logged out successfully' });
   }
+
+
 }

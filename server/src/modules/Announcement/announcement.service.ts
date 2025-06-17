@@ -21,6 +21,13 @@ export class AnnouncementService {
         ...(location && { location }),
         ...(categoryID && { categoryID }),
       },
+      include: {
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
     });
 
     return {
